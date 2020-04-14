@@ -101,6 +101,7 @@ function get_recordings($order_by, $order_direction)
 	$order = str_replace(',', ' '.$order_direction.',', $order_by).' '.$order_direction;
 
 	$mysql = mysqli_connect('localhost', 'mythtv', 'mythtv', 'mythconverg');
+	mysqli_query($mysql, 'SET NAMES \'utf8\'');
 	$result = mysqli_query($mysql,
 		'SELECT *,'.
 		' filesize * 8 / (UNIX_TIMESTAMP(endtime) - UNIX_TIMESTAMP(starttime)) bitrate,'.
@@ -123,6 +124,7 @@ function get_recordings($order_by, $order_direction)
 function get_recordings_grouped()
 {
 	$mysql = mysqli_connect('localhost', 'mythtv', 'mythtv', 'mythconverg');
+	mysqli_query($mysql, 'SET NAMES \'utf8\'');
 	$result = mysqli_query($mysql,
 		'SELECT title, recgroup, COUNT(*) count, SUM(filesize) filesize'.
 		' FROM recorded'.
@@ -161,6 +163,7 @@ function get_labelled_size($size)
 <head>
 <link rel='icon' href='/skins/default/img/favicon.ico' type='image/x-icon'>
 <link rel='shortcut icon' href='/skins/default/img/favicon.ico' type='image/x-icon'>
+<meta http-equiv='Content-type' content='text/html; charset=utf-8'/>
 <title>MythTV Recordings</title>
 <style type='text/css'>
 td a
