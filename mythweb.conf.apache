@@ -49,6 +49,11 @@
     #    BrowserMatch       "MSIE"      AuthDigestEnableQueryStringHack=On
     #    Order              allow,deny
     #    Satisfy            any
+        AuthType           Digest
+        AuthName           "MythTV"
+        AuthUserFile       /var/www/htdigest
+        Require            valid-user
+        BrowserMatch       "MSIE"      AuthDigestEnableQueryStringHack=On
     #
     #  * If you're running Apache earlier than 2.2, you will need to use
     #    the AuthDigestFile command instead of AuthUserFile (3rd line above).
