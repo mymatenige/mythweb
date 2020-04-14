@@ -71,6 +71,10 @@
         #    setenv db_name          "mythconverg"
         #    setenv db_login         "mythtv"
         #    setenv db_password      "mythtv"
+            setenv db_server        "localhost"
+            setenv db_name          "mythconverg"
+            setenv db_login         "mythtv"
+            setenv db_password      "mythtv"
 
         #
         # By default, MythWeb uses the hostname program to look up the hostname of the
