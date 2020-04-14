@@ -28,13 +28,13 @@
 #    /var/www/html/mythweb
 #    /srv/www/htdocs/mythweb
 #
-    <Directory "/var/www/html/data">
+    <Directory "/home/pvr.grufty.co.uk/public_html/data">
         # For Apache 2.2
         #Options -All +FollowSymLinks +IncludesNoExec
         # For Apache 2.4+
         Options +FollowSymLinks +IncludesNoExec
     </Directory>
-    <Directory "/var/www/html" >
+    <Directory "/home/pvr.grufty.co.uk/public_html" >
 
     ############################################################################
     # I *strongly* urge you to turn on authentication for MythWeb.  It is disabled
