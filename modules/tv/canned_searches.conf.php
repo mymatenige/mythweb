@@ -22,7 +22,7 @@ $Canned_Searches = array(
          . '     AND DAYOFYEAR(program.originalairdate) ='
          . '         DAYOFYEAR(program.starttime))'
          . '   OR (program.category_type="movie"'
-         . '     AND program.stars > 0.5'
+         . '     AND program.stars > 0.28' // > than 1* - why?
          . '     AND program.airdate >= YEAR(NOW()) - 3)'
          . ' )',
 
@@ -30,14 +30,14 @@ $Canned_Searches = array(
         => 'category_type="movie"',
 
     t('Movies, 3&frac12; Stars or more')
-        => 'category_type="movie" AND program.stars > 0.8',
+        => 'category_type="movie" AND program.stars > 0.64', // i.e. > than 3*
 
     t('Movies, 3&frac12; Stars or more (HD)')
         => 'category_type="movie" AND program.stars > 0.64 AND hdtv & 1', // i.e. > than 3*
 
     t('Movies, Stinkers (2 Stars or less)')
-        => 'category_type="movie" AND program.stars < 0.5625'
-          .' AND program.stars > 0.0',
+        => 'category_type="movie" AND program.stars < 0.55' // i.e. < 2.5*
+          .' AND program.stars > 0.0', // i.e. has star rating
 
     t('Children\'s Movies')
         => 'category="children" AND category_type="movie"',
