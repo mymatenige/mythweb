@@ -295,7 +295,7 @@ foreach ($recordings as $recording)
 		echo '<tr>';
 		foreach ($order_bys as $name => $order_by)
 		{
-			echo '<th><a href=\'?order_by=\''.urlencode($order_by).'&amp;order_direction=';
+			echo '<th><a href=\'?order_by='.urlencode($order_by).'&amp;order_direction=';
 
 			if ($_REQUEST['order_by'] == $order_by)
 			{
