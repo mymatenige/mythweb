@@ -64,7 +64,7 @@ function get_bit_rate_text($free, $bps, $direction, $type)
 		$str = sprintf('%d', $mins).' minutes';
 	}
 
-	return $str.' $direction, using the $type rate of '.sprintf('%d', $bps/1024.0).' Kb/sec';
+	return $str.' '.$direction.', using the '.$type.' rate of '.sprintf('%d', $bps/1024.0).' Kb/sec';
 }
 
 function get_date_time($date_time)
