@@ -11,10 +11,12 @@
 #
 #    <LocationMatch .*/pl/stream/[0-9]+/[0-9]+>
 #        Allow from all
+#        Satisfy Any
 #    </LocationMatch>
 #
 #    <LocationMatch .*/music/stream.php>
 #        Allow from all
+#        Satisfy Any
 #    </LocationMatch>
 
 
@@ -26,13 +28,13 @@
 #    /var/www/html/mythweb
 #    /srv/www/htdocs/mythweb
 #
-    <Directory "/var/www/html/data">
+    <Directory "/home/pvr.grufty.co.uk/public_html/data">
         # For Apache 2.2
         #Options -All +FollowSymLinks +IncludesNoExec
         # For Apache 2.4+
         Options +FollowSymLinks +IncludesNoExec
     </Directory>
-    <Directory "/var/www/html" >
+    <Directory "/home/pvr.grufty.co.uk/public_html" >
 
     ############################################################################
     # I *strongly* urge you to turn on authentication for MythWeb.  It is disabled
@@ -47,6 +49,11 @@
     #    BrowserMatch       "MSIE"      AuthDigestEnableQueryStringHack=On
     #    Order              allow,deny
     #    Satisfy            any
+        AuthType           Digest
+        AuthName           "MythTV"
+        AuthUserFile       /var/www/htdigest
+        Require            valid-user
+        BrowserMatch       "MSIE"      AuthDigestEnableQueryStringHack=On
     #
     #  * If you're running Apache earlier than 2.2, you will need to use
     #    the AuthDigestFile command instead of AuthUserFile (3rd line above).
@@ -69,6 +76,10 @@
         #    setenv db_name          "mythconverg"
         #    setenv db_login         "mythtv"
         #    setenv db_password      "mythtv"
+            setenv db_server        "localhost"
+            setenv db_name          "mythconverg"
+            setenv db_login         "mythtv"
+            setenv db_password      "mythtv"
 
         #
         # By default, MythWeb uses the hostname program to look up the hostname of the
