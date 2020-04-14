@@ -124,9 +124,9 @@ function get_recordings_grouped()
 {
 	$mysql = mysqli_connect('localhost', 'mythtv', 'mythtv', 'mythconverg');
 	$result = mysqli_query($mysql,
-		'SELECT title, COUNT(*) count, SUM(filesize) filesize'.
+		'SELECT title, recgroup, COUNT(*) count, SUM(filesize) filesize'.
 		' FROM recorded'.
-		' GROUP by title'.
+		' GROUP by title, recgroup'.
 		' ORDER BY SUM(filesize) DESC;');
 	$recordings = array();
 	while ($recording = mysqli_fetch_assoc($result))
@@ -393,6 +393,7 @@ foreach ($recordings as $recording)
 <table>
 <tr>
 	<th>Title</th>
+	<th>Group</th>
 	<th>Size</th>
 </tr>
 <?php
@@ -407,6 +408,7 @@ foreach ($recordings as $recording)
 		echo ' ('.htmlentities($recording['count'], ENT_QUOTES).')';
 	}
 	echo '</td>'.PHP_EOL;
+	echo '<td>'.htmlentities($recording['recgroup'], ENT_QUOTES).'</td>'.PHP_EOL;
 	echo '<td>'.htmlentities(get_labelled_size($recording['filesize']), ENT_QUOTES).'</td>'.PHP_EOL;
 	echo '</tr>'.PHP_EOL;
 }
