@@ -103,33 +103,23 @@ function get_recordings($order_by, $order_direction)
 	$mysql = mysqli_connect('localhost', 'mythtv', 'mythtv', 'mythconverg');
 	mysqli_query($mysql, 'SET NAMES \'utf8\'');
 	$result = mysqli_query($mysql,
-		'SELECT *,'.
-		' filesize * 8 / (UNIX_TIMESTAMP(endtime) - UNIX_TIMESTAMP(starttime)) bitrate,'.
-		' UNIX_TIMESTAMP(progend) - UNIX_TIMESTAMP(progstart) proglength,'.
-		' CONVERT_TZ(progend, \'UTC\', \'SYSTEM\') progend_system,'.
-		' CONVERT_TZ(progstart, \'UTC\', \'SYSTEM\') progstart_system'.
+		'SELECT'.
+		' CASE WHEN COUNT(DISTINCT callsign) > 1 THEN \'\' ELSE callsign END callsign,'.
+		' title,'.
+		' COUNT(*) count,'.
+		' CASE WHEN COUNT(DISTINCT subtitle) > 1 THEN \'\' ELSE subtitle END subtitle,'.
+		' CASE WHEN COUNT(DISTINCT inetref) > 1 THEN \'\' ELSE inetref END inetref,'.
+		' CASE WHEN COUNT(DISTINCT basename) > 1 THEN \'\' ELSE basename END basename,'.
+	       	' SUM(filesize) filesize,'.
+		' CONVERT_TZ(MIN(progstart), \'UTC\', \'SYSTEM\') progstart,'.
+		' CONVERT_TZ(MAX(progend), \'UTC\', \'SYSTEM\') progend,'.
+		' SUM(UNIX_TIMESTAMP(progend) - UNIX_TIMESTAMP(progstart)) proglength,'.
+		' AVG((filesize * 8) / (UNIX_TIMESTAMP(endtime) - UNIX_TIMESTAMP(starttime))) bitrate,'.
+		' recgroup'.
 		' FROM recorded'.
 		' LEFT JOIN channel ON recorded.chanid = channel.chanid'.
-		' ORDER BY recgroup, '.mysqli_real_escape_string($mysql, $order).';');
-	$recordings = array();
-	while ($recording = mysqli_fetch_assoc($result))
-	{
-		$recordings[] = $recording;
-	}
-	mysqli_close($mysql);
-
-	return $recordings;
-}
-
-function get_recordings_grouped()
-{
-	$mysql = mysqli_connect('localhost', 'mythtv', 'mythtv', 'mythconverg');
-	mysqli_query($mysql, 'SET NAMES \'utf8\'');
-	$result = mysqli_query($mysql,
-		'SELECT title, recgroup, COUNT(*) count, SUM(filesize) filesize'.
-		' FROM recorded'.
 		' GROUP by title, recgroup'.
-		' ORDER BY SUM(filesize) DESC;');
+		' ORDER BY recgroup, '.mysqli_real_escape_string($mysql, $order).';');
 	$recordings = array();
 	while ($recording = mysqli_fetch_assoc($result))
 	{
@@ -253,8 +243,8 @@ $order_bys = array(
 	'Link'		=> 'inetref,filesize,title',
 	'Basename'	=> 'basename,title,subtitle',
 	'Size'		=> 'filesize,title,subtitle',
-	'Start'		=> 'progstart_system,filesize,title',
-	'End'		=> 'progend_system,filesize,title',
+	'Start'		=> 'progstart,filesize,title',
+	'End'		=> 'progend,filesize,title',
 	'Length'	=> 'proglength,filesize,title',
 	'Bitrate'	=> 'bitrate,filesize,title',
 );
@@ -342,7 +332,12 @@ foreach ($recordings as $recording)
 	{
 		echo '<tr>'.PHP_EOL;
 		echo '<td class=\'l_td\'>'.htmlentities($recording['callsign'], ENT_QUOTES).'</td>'.PHP_EOL;
-		echo '<td class=\'l_td\'>'.htmlentities($recording['title'], ENT_QUOTES).'</td>'.PHP_EOL;
+		echo '<td class=\'l_td\'>'.htmlentities($recording['title'], ENT_QUOTES);
+		if ($recording['count'] > 1)
+		{
+			echo ' ('.htmlentities($recording['count'], ENT_QUOTES).')';
+      	 	}
+		echo '</td>'.PHP_EOL;
 
 		echo '<td class=\'l_td\'>'.PHP_EOL;
 
@@ -383,39 +378,13 @@ foreach ($recordings as $recording)
 
 		echo '<td class=\'r_td\'>'.htmlentities($recording['basename'], ENT_QUOTES).'</td>'.PHP_EOL;
 		echo '<td class=\'r_td\'>'.htmlentities(get_labelled_size($recording['filesize']), ENT_QUOTES).'</td>'.PHP_EOL;
-		echo '<td class=\'r_td\'>'.htmlentities(get_date_time($recording['progstart_system']), ENT_QUOTES).'</td>'.PHP_EOL;
-		echo '<td class=\'r_td\'>'.htmlentities(get_date_time($recording['progend_system']), ENT_QUOTES).'</td>'.PHP_EOL;
+		echo '<td class=\'r_td\'>'.htmlentities(get_date_time($recording['progstart']), ENT_QUOTES).'</td>'.PHP_EOL;
+		echo '<td class=\'r_td\'>'.htmlentities(get_date_time($recording['progend']), ENT_QUOTES).'</td>'.PHP_EOL;
 		echo '<td class=\'r_td\'>'.htmlentities(get_length($recording['proglength']), ENT_QUOTES).'</td>'.PHP_EOL;
 		echo '<td class=\'r_td\'>'.htmlentities(sprintf('%d', $recording['bitrate'] / 1024.0), ENT_QUOTES).'</td>'.PHP_EOL;
 		echo '</tr>'.PHP_EOL;
 	}
 }
-?>
-</table>
-<h2>Title Grouping</h2>
-<table>
-<tr>
-	<th>Title</th>
-	<th>Group</th>
-	<th>Size</th>
-</tr>
-<?php
-$recordings = get_recordings_grouped();
-
-foreach ($recordings as $recording)
-{
-	echo '<tr>'.PHP_EOL;
-	echo '<td>'.htmlentities($recording['title'], ENT_QUOTES);
-	if ($recording['count'] > 1)
-	{
-		echo ' ('.htmlentities($recording['count'], ENT_QUOTES).')';
-	}
-	echo '</td>'.PHP_EOL;
-	echo '<td>'.htmlentities($recording['recgroup'], ENT_QUOTES).'</td>'.PHP_EOL;
-	echo '<td>'.htmlentities(get_labelled_size($recording['filesize']), ENT_QUOTES).'</td>'.PHP_EOL;
-	echo '</tr>'.PHP_EOL;
-}
-
 ?>
 </table>
 </body>
