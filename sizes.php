@@ -110,7 +110,7 @@ function get_recordings($order_by, $order_direction)
 		' CASE WHEN COUNT(DISTINCT subtitle) > 1 THEN \'\' ELSE subtitle END subtitle,'.
 		' CASE WHEN COUNT(DISTINCT inetref) > 1 THEN \'\' ELSE inetref END inetref,'.
 		' CASE WHEN COUNT(DISTINCT basename) > 1 THEN \'\' ELSE basename END basename,'.
-	       	' SUM(filesize) filesize,'.
+		' SUM(filesize) filesize,'.
 		' CONVERT_TZ(MIN(progstart), \'UTC\', \'SYSTEM\') progstart,'.
 		' CONVERT_TZ(MAX(progend), \'UTC\', \'SYSTEM\') progend,'.
 		' SUM(UNIX_TIMESTAMP(progend) - UNIX_TIMESTAMP(progstart)) proglength,'.
@@ -223,8 +223,8 @@ td
 <table>
 <?php
 
-$f = disk_free_space('/srv/mythtv/storage/default') + disk_free_space('/nfs/nas.grufty.co.uk/mythtv/default');
-$t = disk_total_space('/srv/mythtv/storage/default') + disk_total_space('/nfs/nas.grufty.co.uk/mythtv/default');
+$f = disk_free_space('/srv/mythtv/storage/default') + disk_free_space('/nfs/nas.grufty.co.uk/data2/media/mythtv/default');
+$t = disk_total_space('/srv/mythtv/storage/default') + disk_total_space('/nfs/nas.grufty.co.uk/data2/media/mythtv/default');
 $a = get_bit_rate_average();
 $m = get_bit_rate_maximum();
 $s = get_seconds_total(); // Not the same as $t - $f due to OS and other things
@@ -336,7 +336,7 @@ foreach ($recordings as $recording)
 		if ($recording['count'] > 1)
 		{
 			echo ' ('.htmlentities($recording['count'], ENT_QUOTES).')';
-      	 	}
+		}
 		echo '</td>'.PHP_EOL;
 
 		echo '<td class=\'l_td\'>'.PHP_EOL;
