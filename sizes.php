@@ -362,7 +362,7 @@ foreach ($recordings as $recording)
 			}
 			else if (preg_match('/^ttvdb\.py_[0-9]+$/', $recording['inetref']) == 1)
 			{
-				echo '<a href=\'https://www.themoviedb.org/movie/'.urlencode(preg_replace('/^ttvdb\.py_/', '', $recording['inetref'])).'\' target=\'_blank\'>Link</a>'.PHP_EOL;
+				echo '<a href=\'https://www.thetvdb.com/dereferrer/series/'.urlencode(preg_replace('/^ttvdb\.py_/', '', $recording['inetref'])).'\' target=\'_blank\'>Link</a>'.PHP_EOL;
 			}
 			else
 			{
