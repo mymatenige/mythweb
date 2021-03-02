@@ -368,6 +368,10 @@ foreach ($recordings as $recording)
 			{
 				echo '<a href=\'https://www.themoviedb.org/tv/'.urlencode(preg_replace('/^tmdb3tv\.py_/', '', $recording['inetref'])).'\' target=\'_blank\'>Link</a>'.PHP_EOL;
 			}
+			else if (preg_match('/^tvmaze\.py_[0-9]+$/', $recording['inetref']) == 1)
+			{
+				echo '<a href=\'https://www.tvmaze.com/shows/'.urlencode(preg_replace('/^tvmaze\.py_/', '', $recording['inetref'])).'\' target=\'_blank\'>Link</a>'.PHP_EOL;
+			}
 			else
 			{
 				echo $recording['inetref'];
