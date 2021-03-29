@@ -111,21 +111,21 @@
         // Requested the "All" mode, but there are no recordings
             if (empty($_REQUEST['title']) && empty($_REQUEST['recgroup'])) {
                 if ($Groups['LiveTV'] > 0) {
-                    $warning = t('Showing all programs from the $1 group.', 'LiveTV');
+                    // $warning = t('Showing all programs from the $1 group.', 'LiveTV');
                     $_REQUEST['recgroup'] = 'LiveTV';
                     continue;
                 }
             }
         // Requested a title that's not in the requested group
             if ($_REQUEST['recgroup'] && $_REQUEST['title'] && $Groups[$_REQUEST['recgroup']] > 0) {
-                $warning = t('Showing all programs from the $1 group.', $_REQUEST['recgroup']);
+                // $warning = t('Showing all programs from the $1 group.', $_REQUEST['recgroup']);
                 unset($_REQUEST['title']);
                 unset($_SESSION['recorded_title']);
                 continue;
             }
         // Catch anything else
             $_REQUEST['refresh'] = true;
-            $warning         = t('Showing all programs.');
+            // $warning         = t('Showing all programs.');
             unset($_REQUEST['title'], $_REQUEST['recgroup']);
             unset($_SESSION['recorded_title'], $_SESSION['recorded_recgroup']);
             continue;
