@@ -197,7 +197,7 @@
                         $program->stopRecording();
                 // Deleted a schedule but not editing a specific program?  Redirect back to the schedule list
                     if (!$program) {
-                        add_warning(t('The requested recording schedule has been deleted.'));
+                        // add_warning(t('The requested recording schedule has been deleted.'));
                         save_session_errors();
                         header('Location: '.root_url.'tv/schedules');
                         exit;
