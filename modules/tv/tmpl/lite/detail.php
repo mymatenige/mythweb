@@ -51,7 +51,7 @@
 <?php
         if ($_GET['recordid'])
             echo '<span class="bold">';
-        echo strftime('%a, %b %e', $schedule->starttime);
+        echo strftime('%a, %e %b %Y', $schedule->starttime);
         if ($program && $program->previouslyshown)
             echo ' ('.t('Repeat').')';
         echo '<br />'
