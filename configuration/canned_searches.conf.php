@@ -40,7 +40,8 @@ $Canned_Searches = array(
          . ' AND program.airdate >= YEAR(NOW()) - 50'
          . ' AND program.category != "Animated"'
          . ' AND program.category != "Children"'
-         . ' AND program.category != "Horror"',
+         . ' AND program.category != "Horror"'
+         . ' AND program.category != "Musical"',
 
     t('Movies, Stinkers (2 Stars or less)')
         => 'category_type="movie" AND program.stars < 0.55' // i.e. < 2.5*
