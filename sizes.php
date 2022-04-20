@@ -223,8 +223,8 @@ td
 <table>
 <?php
 
-$f = disk_free_space('/srv/mythtv/storage/default') + disk_free_space('/nfs/nas.grufty.co.uk/data2/media/mythtv/default');
-$t = disk_total_space('/srv/mythtv/storage/default') + disk_total_space('/nfs/nas.grufty.co.uk/data2/media/mythtv/default');
+$f = disk_free_space('/srv/data1/media/mythtv/storage/default') + disk_free_space('/nfs/nas.grufty.co.uk/data2/media/mythtv/storage/default');
+$t = disk_total_space('/srv/data1/media/mythtv/storage/default') + disk_total_space('/nfs/nas.grufty.co.uk/data2/media/mythtv/storage/default');
 $a = get_bit_rate_average();
 $m = get_bit_rate_maximum();
 $s = get_seconds_total(); // Not the same as $t - $f due to OS and other things
