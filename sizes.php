@@ -84,6 +84,22 @@ function get_length($length)
 	return $hours.':'.sprintf('%02d', $mins);
 }
 
+function get_position($bookmark, $framerate)
+{
+	$framerate /= 1000;
+
+	$h = (int) ($bookmark / ($framerate * 60 * 60));
+	$bookmark -= $h * ($framerate * 60 * 60);
+
+	$m = (int) ($bookmark / ($framerate * 60));
+	$bookmark -= $m * ($framerate * 60);
+
+	$s = (int) ($bookmark / ($framerate));
+	$bookmark -= $s;
+
+	return sprintf('%02d:%02d:%02d', $h, $m, $s);
+}
+
 function get_seconds_total()
 {
 	$mysql = mysqli_connect('localhost', 'mythtv', 'mythtv', 'mythconverg');
@@ -104,22 +120,26 @@ function get_recordings($order_by, $order_direction)
 	mysqli_query($mysql, 'SET NAMES \'utf8\'');
 	$result = mysqli_query($mysql,
 		'SELECT'.
-		' CASE WHEN COUNT(DISTINCT callsign) > 1 THEN \'\' ELSE callsign END callsign,'.
-		' title,'.
+		' CASE WHEN COUNT(DISTINCT channel.callsign) > 1 THEN \'\' ELSE channel.callsign END callsign,'.
+		' recorded.title title,'.
 		' COUNT(*) count,'.
-		' CASE WHEN COUNT(DISTINCT subtitle) > 1 THEN \'\' ELSE subtitle END subtitle,'.
-		' CASE WHEN COUNT(DISTINCT inetref) > 1 THEN \'\' ELSE inetref END inetref,'.
-		' CASE WHEN COUNT(DISTINCT basename) > 1 THEN \'\' ELSE basename END basename,'.
-		' SUM(filesize) filesize,'.
-		' CONVERT_TZ(MIN(progstart), \'UTC\', \'SYSTEM\') progstart,'.
-		' CONVERT_TZ(MAX(progend), \'UTC\', \'SYSTEM\') progend,'.
-		' SUM(UNIX_TIMESTAMP(progend) - UNIX_TIMESTAMP(progstart)) proglength,'.
-		' AVG((filesize * 8) / (UNIX_TIMESTAMP(endtime) - UNIX_TIMESTAMP(starttime))) bitrate,'.
-		' recgroup'.
+		' CASE WHEN COUNT(DISTINCT recorded.subtitle) > 1 THEN \'\' ELSE recorded.subtitle END subtitle,'.
+		' CASE WHEN COUNT(DISTINCT recorded.inetref)  > 1 THEN \'\' ELSE recorded.inetref  END inetref,'.
+		' CASE WHEN COUNT(DISTINCT recorded.basename) > 1 THEN \'\' ELSE recorded.basename END basename,'.
+		' SUM(recorded.filesize) filesize,'.
+		' CONVERT_TZ(MIN(recorded.progstart), \'UTC\', \'SYSTEM\') progstart,'.
+		' CONVERT_TZ(MAX(recorded.progend),   \'UTC\', \'SYSTEM\') progend,'.
+		' SUM(UNIX_TIMESTAMP(recorded.progend) - UNIX_TIMESTAMP(recorded.progstart)) proglength,'.
+		' AVG((recorded.filesize * 8) / (UNIX_TIMESTAMP(recorded.endtime) - UNIX_TIMESTAMP(recorded.starttime))) bitrate,'.
+		' recorded.recgroup recgroup,'.
+		' bookmark.mark bookmark,'.
+		' framerate.data framerate'.
 		' FROM recorded'.
 		' LEFT JOIN channel ON recorded.chanid = channel.chanid'.
-		' GROUP by title, recgroup'.
-		' ORDER BY recgroup, '.mysqli_real_escape_string($mysql, $order).';');
+		' LEFT JOIN recordedmarkup bookmark  ON recorded.chanid = bookmark.chanid  AND recorded.starttime = bookmark.starttime  AND bookmark.type  = 2'.
+		' LEFT JOIN recordedmarkup framerate ON recorded.chanid = framerate.chanid AND recorded.starttime = framerate.starttime AND framerate.type = 32'.
+		' GROUP by recorded.title, recorded.recgroup, bookmark, framerate'.
+		' ORDER BY recorded.recgroup, '.mysqli_real_escape_string($mysql, $order).';');
 	$recordings = array();
 	while ($recording = mysqli_fetch_assoc($result))
 	{
@@ -245,6 +265,7 @@ $order_bys = array(
 	'Size'		=> 'filesize,title,subtitle',
 	'Start'		=> 'progstart,filesize,title',
 	'End'		=> 'progend,filesize,title',
+	'Bookmark'	=> 'bookmark,filesize,title',
 	'Length'	=> 'proglength,filesize,title',
 	'Bitrate'	=> 'bitrate,filesize,title',
 );
@@ -388,6 +409,18 @@ foreach ($recordings as $recording)
 		echo '<td class=\'r_td\'>'.htmlentities(get_labelled_size($recording['filesize']), ENT_QUOTES).'</td>'.PHP_EOL;
 		echo '<td class=\'r_td\'>'.htmlentities(get_date_time($recording['progstart']), ENT_QUOTES).'</td>'.PHP_EOL;
 		echo '<td class=\'r_td\'>'.htmlentities(get_date_time($recording['progend']), ENT_QUOTES).'</td>'.PHP_EOL;
+		echo '<td class=\'r_td\'>';
+
+		if (isset($recording['bookmark']) && isset($recording['framerate']))
+		{
+			echo htmlentities(get_position($recording['bookmark'], $recording['framerate']));
+		}
+		else
+		{
+			echo '&nbsp;';
+		}
+
+		echo '</td>'.PHP_EOL;
 		echo '<td class=\'r_td\'>'.htmlentities(get_length($recording['proglength']), ENT_QUOTES).'</td>'.PHP_EOL;
 		echo '<td class=\'r_td\'>'.htmlentities(sprintf('%d', $recording['bitrate'] / 1024.0), ENT_QUOTES).'</td>'.PHP_EOL;
 		echo '</tr>'.PHP_EOL;
