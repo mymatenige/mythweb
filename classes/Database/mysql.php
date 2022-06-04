@@ -54,6 +54,7 @@ class Database_mysql extends Database {
     // Connect to the database
         $this->dbh = @mysqli_connect($port ? "$server:$port" : $server, $login, $password)
             or $this->error("Can't connect to the database server.");
+        mysqli_report(MYSQLI_REPORT_OFF);
         if ($this->dbh) {
             @mysqli_select_db($db_name, $this->dbh)
                 or $this->error("Can't access the database file.");

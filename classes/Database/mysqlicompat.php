@@ -61,6 +61,7 @@ class Database_mysqlicompat extends Database {
     // Connect to the database
         $this->dbh = @mysqli_connect($server, $login, $password, NULL, $port)
             or $this->error("Can't connect to the database server.");
+        mysqli_report(MYSQLI_REPORT_OFF);
         if ($this->dbh) {
             @mysqli_select_db($this->dbh, $db_name)
                 or $this->error("Can't access the database file.");
