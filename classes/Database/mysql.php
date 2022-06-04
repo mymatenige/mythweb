@@ -51,10 +51,13 @@ class Database_mysql extends Database {
                     dl('mysql.so');
             }
         }
+
+        // Silence exceptions in PHP 8.1.0+
+        mysqli_report(MYSQLI_REPORT_OFF);
+
     // Connect to the database
         $this->dbh = @mysqli_connect($port ? "$server:$port" : $server, $login, $password)
             or $this->error("Can't connect to the database server.");
-        mysqli_report(MYSQLI_REPORT_OFF);
         if ($this->dbh) {
             @mysqli_select_db($db_name, $this->dbh)
                 or $this->error("Can't access the database file.");
