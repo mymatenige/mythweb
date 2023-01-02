@@ -100,6 +100,29 @@ function get_position($bookmark, $framerate)
 	return sprintf('%02d:%02d:%02d', $h, $m, $s);
 }
 
+function get_seasons_and_episodes()
+{
+	$mysql = mysqli_connect('localhost', 'mythtv', 'mythtv', 'mythconverg');
+	$result = mysqli_query($mysql,
+		'SELECT'.
+		' recorded.title,'.
+		' MIN(recorded.season) season,'.
+		' MIN(recorded.episode) episode'.
+		' FROM'.
+		' mythconverg.recorded'.
+		' WHERE'.
+		' recorded.recgroup != \'Deleted\' AND recorded.season != 0'.
+		' GROUP BY recorded.title;');
+	$recordings = array();
+	while ($recording = mysqli_fetch_assoc($result))
+	{
+		$recordings[$recording['title']] = $recording;
+	}
+	mysqli_close($mysql);
+
+	return $recordings;
+}
+
 function get_seconds_total()
 {
 	$mysql = mysqli_connect('localhost', 'mythtv', 'mythtv', 'mythconverg');
@@ -285,6 +308,7 @@ if (!isset($_REQUEST['order_direction']) || !in_array($_REQUEST['order_direction
 }
 
 $recordings = get_recordings($_REQUEST['order_by'], $_REQUEST['order_direction']);
+$seasons = get_seasons_and_episodes();
 
 $subtitles = array();
 foreach ($recordings as $recording)
@@ -353,7 +377,10 @@ foreach ($recordings as $recording)
 	{
 		echo '<tr>'.PHP_EOL;
 		echo '<td class=\'l_td\'>'.htmlentities($recording['callsign'], ENT_QUOTES).'</td>'.PHP_EOL;
-		echo '<td class=\'l_td\'>'.htmlentities($recording['title'], ENT_QUOTES);
+		echo '<td class=\'l_td\'>';
+		if (array_key_exists($recording['title'], $seasons) && $seasons[$recording['title']]['episode'] != 1) echo '<span style=\'color: red; font-weight: bold;\'>';
+		echo htmlentities($recording['title'], ENT_QUOTES);
+		if (array_key_exists($recording['title'], $seasons) && $seasons[$recording['title']]['episode'] != 1) echo '</span>';
 		if ($recording['count'] > 1)
 		{
 			echo ' ('.htmlentities($recording['count'], ENT_QUOTES).')';
