@@ -123,13 +123,15 @@
             add_error('Regular Expression Error:  '.$match[1]);
             return;
         }
-    // Fatal errors should report considerably more detail
-        if (in_array($errno, array(E_USER_ERROR, E_ERROR))) {
+
         // What type of error?
-            $subject = 'FATAL Error';
+            $subject = strtoupper(error_type($errno)).' Error';
         // Email a backtrace
             $err = build_backtrace($errno, $errstr, $errfile, $errline, $vars);
             email_backtrace($err, $errfile, $errline, $subject);
+
+    // Fatal errors should report considerably more detail
+        if (in_array($errno, array(E_USER_ERROR, E_ERROR))) {
         // Print something to the user, too.
             if (file_exists('modules/_shared/tmpl/_errors/fatal.php')) {
                 require_once 'modules/_shared/tmpl/_errors/fatal.php';
@@ -152,7 +154,7 @@
         else {
             echo "<hr><p><b>", error_type($errno), "</b>",
                 " at $errfile, line $errline:<br />$errstr</p>\n",
-                "<!-- ".build_backtrace($errno, $errstr, $errfile, $errline, $vars)." -->\n",
+                "<!-- ".$err." -->\n",
                 "<hr>\n";
         }
     }
