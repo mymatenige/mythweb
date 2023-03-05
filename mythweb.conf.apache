@@ -49,6 +49,11 @@
     #    BrowserMatch       "MSIE"      AuthDigestEnableQueryStringHack=On
     #    Order              allow,deny
     #    Satisfy            any
+        AuthType           Digest
+        AuthName           "MythTV"
+        AuthUserFile       /var/www/htdigest
+        Require            valid-user
+        BrowserMatch       "MSIE"      AuthDigestEnableQueryStringHack=On
     #
     #  * If you're running Apache earlier than 2.2, you will need to use
     #    the AuthDigestFile command instead of AuthUserFile (3rd line above).
@@ -71,6 +76,10 @@
         #    setenv db_name          "mythconverg"
         #    setenv db_login         "mythtv"
         #    setenv db_password      "mythtv"
+            setenv db_server        "localhost"
+            setenv db_name          "mythconverg"
+            setenv db_login         "mythtv"
+            setenv db_password      "mythtv"
 
         #
         # By default, MythWeb uses the hostname program to look up the hostname of the
@@ -98,48 +107,6 @@
         # to your downloadable files.
         #
         #   setenv fs_encoding       "ISO-8859-1"
-
-        </Files>
-
-    ############################################################################
-    # The following settings relate to PHP config.
-    #
-
-        <Files *.php>
-
-        #  These settings are intended for apache 2.x.  If your version of apache
-        #  doesn't support php_value, or things like memory_limit aren't working
-        #  as expected, then use these settings as examples for your own php.ini
-        #  files.
-#            php_value safe_mode                     0
-#            php_value register_globals              0
-#            php_value magic_quotes_gpc              0
-            php_value file_uploads                  0
-            php_value allow_url_fopen               On
-
-            php_value zlib.output_handler           Off
-#            php_value output_handler                NULL
-
-        # If you have a large number of channels, you may need to increase
-        # this value to prevent PHP from running out of memory during
-        # searches.  The default is 64M.
-            php_value memory_limit                  64M
-#            php_value memory_limit                  128M
-#            php_value memory_limit                  256M
-#            php_value memory_limit                  512M
-
-        # If you have a large number of channels, php may timeout creating
-        # complex pages, so you will need to increase the amount of time
-        # php has to create the page. The default is 30 seconds.
-            php_value max_execution_time 30
-#            php_value max_execution_time 60
-#            php_value max_execution_time 120
-
-        # Note: php_flag does not work in older versions of php
-#            php_flag output_handler                 "NULL"
-
-            php_value display_startup_errors        On
-            php_value display_errors                On
 
         </Files>
 
