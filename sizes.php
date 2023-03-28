@@ -379,8 +379,10 @@ foreach ($recordings as $recording)
 		echo '<td class=\'l_td\'>'.htmlentities($recording['callsign'], ENT_QUOTES).'</td>'.PHP_EOL;
 		echo '<td class=\'l_td\'>';
 		if (array_key_exists($recording['title'], $seasons) && $seasons[$recording['title']]['episode'] != 1) echo '<span style=\'color: red; font-weight: bold;\'>';
+		else if (array_key_exists($recording['title'], $seasons) && $seasons[$recording['title']]['season'] != 1) echo '<span style=\'color: orange; font-weight: bold;\'>';
 		echo htmlentities($recording['title'], ENT_QUOTES);
 		if (array_key_exists($recording['title'], $seasons) && $seasons[$recording['title']]['episode'] != 1) echo '</span>';
+		else if (array_key_exists($recording['title'], $seasons) && $seasons[$recording['title']]['season'] != 1) echo '</span>';
 		if ($recording['count'] > 1)
 		{
 			echo ' ('.htmlentities($recording['count'], ENT_QUOTES).')';
