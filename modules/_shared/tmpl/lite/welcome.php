@@ -10,7 +10,7 @@
  **/
 
 // Set the desired page title
-    $page_title = 'Welcome to MythWeb!';
+    $page_title = 'MythWeb';
 
 // Custom headers
     $headers[] = '<link rel="stylesheet" type="text/css" href="'.skin_url.'/welcome.css" />';

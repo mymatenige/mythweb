@@ -226,7 +226,7 @@
                         echo ':<br>', $schedule->subtitle;
                     ?></a>
                 <div id="x-time"><?php
-                echo strftime('%a, %b %e', $schedule->starttime);
+                echo strftime('%a, %e %b %Y', $schedule->starttime);
                 echo ', '
                     .t('$1 to $2', strftime($_SESSION['time_format'], $schedule->starttime),
                                    strftime($_SESSION['time_format'], $schedule->endtime));
