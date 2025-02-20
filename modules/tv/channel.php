@@ -22,7 +22,7 @@
 // New list date?
     if ($_REQUEST['date']) {
         if (strlen($_REQUEST['date']) == 8)
-            $_REQUEST['date'] = unixtime(sprintf('%08d000000', $_REQUEST['date']));
+            $_REQUEST['date'] = unixtime(sprintf('%08d000000', $_REQUEST['date'])) - date('Z');
         $_SESSION['list_time'] = $_REQUEST['date'];
     }
 
