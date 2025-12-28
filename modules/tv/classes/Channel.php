@@ -113,6 +113,8 @@ class Channel extends MythBase {
         foreach ($channel_data AS $key => $value)
             $this->$key = $value;
         $this->icon = 'data/tv_icons/'.basename($channel_data['icon']);
+
+/*
     // Try to copy over any missing channel icons
         if ($channel_data['icon'] && !file_exists($this->icon)) {
         // Local file?
@@ -127,6 +129,8 @@ class Channel extends MythBase {
                 unset($data);
             }
         }
+ */
+
     // Wipe the icon path completely if it doesn't exist.
         if (!is_file($this->icon))
             $this->icon = null;

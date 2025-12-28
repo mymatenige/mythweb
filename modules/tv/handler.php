@@ -9,6 +9,7 @@
  *
  **/
 
+/*
 // Make sure the image cache path exists and is writable
     if (!is_dir('data/tv_icons') && !mkdir('data/tv_icons', 0755)) {
         custom_error('Error creating data/tv_icons: Please check permissions on the data directory.');
@@ -19,6 +20,7 @@
         custom_error('data/tv_icons directory is not writable by '.$process_user['name'].'. Please check permissions.');
         exit;
     }
+ */
 
 // Call the opensearch module early, before loading all kinds of stuff it
 // doesn't need.  Plus, it's not "enabled" like other modules, so we skip that

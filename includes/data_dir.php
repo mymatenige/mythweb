@@ -9,6 +9,7 @@
  *
  **/
 
+/*
 // Make sure the data directory exists and is writable
     if (!is_dir('data') && !mkdir('data', 0755)) {
         custom_error('Error creating the data directory. Please check permissions.');
@@ -17,3 +18,4 @@
         $process_user = posix_getpwuid(posix_geteuid());
         custom_error('data directory is not writable by '.$process_user['name'].'. Please check permissions.');
     }
+ */
