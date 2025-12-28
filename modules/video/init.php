@@ -9,6 +9,7 @@
  *
  **/
 
+/*
 // First, we should check to see that MythVideo is configured.
 // Make sure to turn off fatal errors in case the table isn't there.
     $db->disable_fatal_errors();
@@ -30,3 +31,4 @@
                                   );
 
     }
+ */
