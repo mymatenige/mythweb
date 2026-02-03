@@ -2,7 +2,7 @@
 
 ini_set('display_errors', 'on');
 
-define('COLSPAN', 10);
+const COLSPAN = 10;
 
 function mysqli_result($result, $row, $field = 0)
 {
@@ -11,14 +11,14 @@ function mysqli_result($result, $row, $field = 0)
 	return $data[$field];
 }
 
-function echo_disk_row($name, $bytes, $total, $colspan, $extra = false)
+function echo_disk_row($name, $bytes, $total, $colspan, $extra = false): void
 {
 	echo '<tr><td colspan=\''.htmlentities($colspan, ENT_QUOTES).'\'><table style=\'width: 100%;\'><tr>'.PHP_EOL;
-	echo '<td class=\'l_td\' style=\'border: 0px; padding: 0px; width: 10%;\'>'.htmlentities($name, ENT_QUOTES).'</td>'.PHP_EOL;
-	echo '<td class=\'r_td\' style=\'border: 0px; padding: 0px; width: 10%;\'>'.htmlentities(get_labelled_size($bytes), ENT_QUOTES).'</td>'.PHP_EOL;
-	echo '<td class=\'r_td\' style=\'border: 0px; padding: 0px; width: 10%;\'>'.htmlentities(sprintf('%.2f', (100.0 / $total) * $bytes), ENT_QUOTES).'%</td>'.PHP_EOL;
-	echo '<td class=\'r_td\' style=\'border: 0px; padding: 0px; width: 10%\'>&nbsp;</td>'.PHP_EOL;
-	echo '<td class=\'l_td\' style=\'border: 0px; padding: 0px;\'>'.(empty($extra) ? '&nbsp;' : htmlentities($extra, ENT_QUOTES)).'</td>'.PHP_EOL;
+	echo '<td class=\'l_td\' style=\'border: 0; padding: 0; width: 10%;\'>'.htmlentities($name, ENT_QUOTES).'</td>'.PHP_EOL;
+	echo '<td class=\'r_td\' style=\'border: 0; padding: 0; width: 10%;\'>'.htmlentities(get_labelled_size($bytes), ENT_QUOTES).'</td>'.PHP_EOL;
+	echo '<td class=\'r_td\' style=\'border: 0; padding: 0; width: 10%;\'>'.htmlentities(sprintf('%.2f', (100.0 / $total) * $bytes), ENT_QUOTES).'%</td>'.PHP_EOL;
+	echo '<td class=\'r_td\' style=\'border: 0; padding: 0; width: 10%\'>&nbsp;</td>'.PHP_EOL;
+	echo '<td class=\'l_td\' style=\'border: 0; padding: 0;\'>'.(empty($extra) ? '&nbsp;' : htmlentities($extra, ENT_QUOTES)).'</td>'.PHP_EOL;
 	echo '</tr></table></td></tr>'.PHP_EOL;
 }
 
@@ -46,7 +46,7 @@ function get_bit_rate_maximum()
 	return $maximum;
 }
 
-function get_bit_rate_text($free, $bps, $direction, $type)
+function get_bit_rate_text($free, $bps, $direction, $type): string
 {
 	$mins = $free/(($bps/8.0)*60.0);
 	$hours = $mins/60.0;
@@ -67,7 +67,7 @@ function get_bit_rate_text($free, $bps, $direction, $type)
 	return $str.' '.$direction.', using the '.$type.' rate of '.sprintf('%d', $bps/1024.0).' Kb/sec';
 }
 
-function get_date_time($date_time)
+function get_date_time($date_time): string
 {
 	return
 		substr($date_time, 11, 2).':'.
@@ -77,14 +77,14 @@ function get_date_time($date_time)
 		substr($date_time,  2, 2);
 }
 
-function get_length($length)
+function get_length($length): string
 {
 	$hours = floor($length / 3600);
 	$mins = ($length - ($hours * 3600)) / 60;
 	return $hours.':'.sprintf('%02d', $mins);
 }
 
-function get_position($bookmark, $framerate)
+function get_position($bookmark, $framerate): string
 {
 	$framerate /= 1000;
 
@@ -95,12 +95,12 @@ function get_position($bookmark, $framerate)
 	$bookmark -= $m * ($framerate * 60);
 
 	$s = (int) ($bookmark / ($framerate));
-	$bookmark -= $s;
+	// $bookmark -= $s;
 
 	return sprintf('%02d:%02d:%02d', $h, $m, $s);
 }
 
-function get_seasons_and_episodes()
+function get_seasons_and_episodes(): array
 {
 	$mysql = mysqli_connect('localhost', 'mythtv', 'mythtv', 'mythconverg');
 	$result = mysqli_query($mysql,
@@ -135,7 +135,7 @@ function get_seconds_total()
 	return $average;
 }
 
-function get_recordings($order_by, $order_direction)
+function get_recordings($order_by, $order_direction): array
 {
 	$order = str_replace(',', ' '.$order_direction.',', $order_by).' '.$order_direction;
 
@@ -173,7 +173,7 @@ function get_recordings($order_by, $order_direction)
 	return $recordings;
 }
 
-function get_labelled_size($size)
+function get_labelled_size($size): string
 {
 	$sizes = array('GB' => 30, 'MB' => 20, 'KB' => 10);
 
@@ -192,7 +192,7 @@ function get_labelled_size($size)
 
 ?>
 <!DOCTYPE HTML PUBLIC '-//W3C//DTD HTML 4.01//EN' 'http://www.w3.org/TR/html4/strict.dtd'>
-<html>
+<html lang="en-GB">
 <head>
 <link rel='icon' href='/skins/default/img/favicon.ico' type='image/x-icon'>
 <link rel='shortcut icon' href='/skins/default/img/favicon.ico' type='image/x-icon'>
@@ -272,7 +272,7 @@ $a = get_bit_rate_average();
 $m = get_bit_rate_maximum();
 $s = get_seconds_total(); // Not the same as $t - $f due to OS and other things
 
-echo '<tr><td colspan=\''.COLSPAN.'\' style=\'border: 0px;\'><h2>Disk Space</h2></td></tr>'.PHP_EOL;
+echo '<tr><td colspan=\''.COLSPAN.'\' style=\'border: 0;\'><h2>Disk Space</h2></td></tr>'.PHP_EOL;
 echo_disk_row('Free', $f, $t, COLSPAN, get_bit_rate_text($f, $a, 'available', 'average'));
 echo_disk_row('Used', $t - $f, $t, COLSPAN, get_bit_rate_text($f, $m, 'available', 'maximum'));
 echo_disk_row('Total', $t, $t, COLSPAN, get_bit_rate_text($s * ($a / 8), $a, 'recorded', 'average'));
@@ -326,9 +326,9 @@ foreach ($recordings as $recording)
 	{
 		$group = $recording['recgroup'];
 
-		echo '<tr><td colspan=\''.COLSPAN.'\' style=\'border: 0px;\'>&nbsp;</td></tr>'.PHP_EOL;
+		echo '<tr><td colspan=\''.COLSPAN.'\' style=\'border: 0;\'>&nbsp;</td></tr>'.PHP_EOL;
 
-		echo '<tr><td colspan=\''.COLSPAN.'\' style=\'border: 0px;\'><h2>'.htmlentities($group, ENT_QUOTES).' Group</h2></td></tr>'.PHP_EOL;
+		echo '<tr><td colspan=\''.COLSPAN.'\' style=\'border: 0;\'><h2>'.htmlentities($group, ENT_QUOTES).' Group</h2></td></tr>'.PHP_EOL;
 
 		echo '<tr>'.PHP_EOL;
 		foreach ($order_bys as $name => $order_by)
@@ -391,7 +391,7 @@ foreach ($recordings as $recording)
 
 		echo '<td class=\'l_td\'>'.PHP_EOL;
 
-		if (isset($subtitles[$group]) && $subtitles[$group] == true)
+		if (isset($subtitles[$group]) && $subtitles[$group])
 		{
 			echo htmlentities($recording['subtitle'], ENT_QUOTES);
 		}
